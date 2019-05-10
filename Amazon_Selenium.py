@@ -1,74 +1,62 @@
 #oluşturan: büşra şahin
 #oluşturma tarihi: 01.05.2019
+#guncelleme tarihi: 10.05.2019
 
 from selenium import webdriver
 import time
-
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 browser = webdriver.Firefox()
 
 browser.get("https://www.amazon.com/")
 
+browser.find_element_by_id('nav-link-accountList').click()
 
-sign_in = browser.find_element_by_id('nav-link-accountList')
-sign_in.click()
+browser.find_element_by_name("email").send_keys("busra.sahin@useinsider.com")
+browser.find_element_by_name("password").send_keys("bsahininsider145")
 
-username = browser.find_element_by_name("email")
-password = browser.find_element_by_name("password")
+browser.find_element_by_id('signInSubmit').click()
 
-username.send_keys("busra.sahin@useinsider.com")
-password.send_keys("bsahininsider145")
+browser.find_element_by_id('twotabsearchtextbox').send_keys("Samsung")
 
-login = browser.find_element_by_xpath("//*[@id='signInSubmit']")
-login.click()
+browser.find_element_by_css_selector('.nav-input').click()
 
-field_keywords = browser.find_element_by_xpath("//*[@id='twotabsearchtextbox']")
-field_keywords.click()
-field_keywords.send_keys("Samsung")
+search_term = browser.find_element_by_css_selector('.a-text-bold').text
+assert search_term, '"Samsung"'
+browser.find_element_by_css_selector('.a-normal a').click()
 
-submit = browser.find_element_by_xpath("/html/body/div[1]/header/div/div[1]/div[3]/div/form/div[2]/div/input")
-submit.click()
+assert browser.find_element_by_css_selector('.a-selected a').text, '2'
 
+product1 = browser.find_elements_by_css_selector('.a-link-normal .a-text-normal')[2]
+product_name = product1.text
+product1.click()
 
-if(browser.current_url.find("Samsung")>-1):
+browser.find_element_by_id('add-to-wishlist-button-submit').click()
 
-    submit = browser.find_element_by_xpath("//*[@id='search']/div[1]/div[2]/div/span[7]/div/div/div/ul/li[3]/a")
-    submit.click()
-    if(browser.current_url.find("page=2")>-1):
+WebDriverWait(browser, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, ".hucInfoTable a")))
 
+browser.find_element_by_css_selector('.a-icon.a-icon-close').click()
 
-        urun = browser.find_element_by_xpath("//*[@id='search']/div[1]/div[2]/div/span[3]/div[1]/div[3]/div/div/div/div[2]/div[2]/div/div[1]/div/div/div[1]/h2/a/span")
-        urun.get_attribute("productTitle")
-        urun.click()
+element_to_hover_over = WebDriverWait(browser, 10).until(
+        EC.element_to_be_clickable((By.ID, 'nav-link-accountList')))
+hover = ActionChains(browser).move_to_element(element_to_hover_over)
+hover.perform()
 
-        urun1 = browser.find_element_by_id('productTitle').text
+WebDriverWait(browser, 10).until(
+        EC.element_to_be_clickable((By.LINK_TEXT, 'Shopping List'))).click()
 
-        submit = browser.find_element_by_xpath("//*[@id='add-to-wishlist-button-submit']")
-        submit.click()
-        time.sleep(3)
-        submit = browser.find_element_by_xpath("//*[@id='WLHUC_viewlist']/span/span")
-        submit.click()
-
-
-        urun2 = browser.find_element_by_css_selector('.a-size-base .a-link-normal').text
-
+product2 = browser.find_element_by_css_selector('.a-size-base .a-link-normal').text
 
 try:
-        assert urun1 == urun2
+        assert product_name == product1
 
-        submit = browser.find_element_by_xpath("//*[@id='a-autoid-7']/span/input")
-        submit.click()
+        submit = browser.find_element_by_id('a-autoid-7').click()
         print("ürün silindi")
-        time.sleep(5)
-
+        time.sleep(4)
 except Exception as e:
-         print("Hatalı eşleşme")
+    print("Hatalı eşleşme")
 
-
-time.sleep(5)
 browser.close()
-
-
-
-
-
-
