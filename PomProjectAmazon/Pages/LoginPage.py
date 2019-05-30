@@ -18,3 +18,8 @@ class LoginPage:
 
     def click_login(self):
         self.driver.find_element_by_id(Locators.login_button_id).click()
+
+#Locartorları bu şekilde çağırmana gerek. bir clası çekmek için import etmen yeterli
+#Locatorları sayfalara bölünüp page clasının altına yerleştirilmeli.
+#wait element clickeble komutunu kullanabilirsin
+#base fonclar oluşturulmalı. Daha sonra o fonc. pagelerde kullanılmalı.
