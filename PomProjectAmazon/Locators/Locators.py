@@ -9,3 +9,6 @@ class Locators:
     icon_click = '.a-icon.a-icon-close'
     product2_text = '.a-size-base .a-link-normal'
     delete_click = 'a-autoid-7'
+    
+    
+    
